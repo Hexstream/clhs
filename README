@@ -1,5 +1,5 @@
-The HyperSpec directory in this thin ASDF wrapper is a complete and
-unmodified copy of Lispworks' Common Lisp HyperSpec version 7.0
+The HyperSpec-7-0 directory in this thin ASDF wrapper is a complete
+and unmodified copy of Lispworks' Common Lisp HyperSpec version 7.0
 (referenced from
 <http://www.lispworks.com/documentation/common-lisp.html>).
 Redistribution of the HyperSpec is made with permission from LispWorks
