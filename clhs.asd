@@ -1,7 +1,7 @@
 (asdf:defsystem #:clhs
 
   :author "HyperSpec: Kent Pitman <kmp@lispworks.com>
-Thin ASDF wrapper: Jean-Philippe Paradis <hexstream@gmail.com>"
+Thin ASDF wrapper (excluding HyperSpec): Jean-Philippe Paradis <hexstream@gmail.com>"
 
   ;; See the LICENSE file for details.
   :license "HyperSpec: Proprietary;
