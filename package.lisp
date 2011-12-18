@@ -3,5 +3,5 @@
 (defpackage #:clhs
   (:use #:cl)
   (:export #:*hyperspec-root*
-	   #:print-emacs-setup-form
+	   #:print-emacs-setup-howto
 	   #:install-emacs-setup-form))
