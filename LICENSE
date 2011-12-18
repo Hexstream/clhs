@@ -8,7 +8,9 @@ released into the public domain (note that as a whole this ASDF system
 rounds up to "Proprietary"):
 
 
-This is free and unencumbered software released into the public domain.
+This ("This" meaning "all files in this directory EXCLUDING
+HyperSpec-7-0 and all files and subdirectories therein, recursively")
+is free and unencumbered software released into the public domain.
 
 Anyone is free to copy, modify, publish, use, compile, sell, or
 distribute this software, either in source code form or as a compiled
