@@ -35,16 +35,6 @@ Lookup a reader-macro (such as "#'" or "(").
 common-lisp-hyperspec-format (C-c C-d ~)
 Lookup a FORMAT directive (such as "~A").
 
-By default, the above commands will open your default browser at the
-appropriate page on the HyperSpec on lispworks.com. To tell emacs to
-use your newly installed local copy instead, put this in your .emacs:
-
-(setq common-lisp-hyperspec-root
-      (expand-file-name "~/quicklisp/dists/quicklisp/software/clhs/HyperSpec-7-0/HyperSpec/"))
-
-(You'll need to ensure Emacs actually executes this command. One way
-is putting the cursor over it and invoking eval-defun (C-M-x)) Another
-way is just restarting Emacs...
 
 If the default browser used is not the one you wanted, here's how
 you might tell Emacs to use Firefox instead:
