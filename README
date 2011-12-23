@@ -23,6 +23,9 @@ to benefit from the increased responsiveness inherent in browsing a
 local resource and to ensure reliable, fast access from anywhere while
 on the go (ex: laptop, smartphone).
 
+Use (clhs:print-emacs-setup-form) to print the command used to tell
+Emacs to use your newly local copy of CLHS.
+
 Slime has commands to quickly get at what you want in the HyperSpec.
 They are:
 

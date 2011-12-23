@@ -2,6 +2,9 @@
 
 (defpackage #:clhs
   (:use #:cl)
-  (:export #:*hyperspec-root*
-	   #:print-emacs-setup-howto
-	   #:install-emacs-setup-form))
+  (:export #:*system-directory*
+	   #:*hyperspec-relative-directory*
+
+	   #:hyperspec-root
+	   #:emacs-setup-form
+	   #:print-emacs-setup-form))
