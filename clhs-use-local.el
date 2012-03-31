@@ -1,4 +1,4 @@
-;;;; Version: 0.3
+;;;; Version: 0.4
 ;;;;
 ;;;; This file was installed by clhs (trivial ASDF wrapper), like this:
 ;;;; (clhs:install-clhs-use-local)
@@ -27,7 +27,7 @@
 (defun quicklisp-clhs-system-location ()
   (let ((location-file (quicklisp-clhs-location-file)))
     (when (file-exists-p location-file)
-      (let ((relative (quicklisp-slime-helper-file-contents location-file)))
+      (let ((relative (quicklisp-clhs-file-contents location-file)))
         (file-name-directory (concat quicklisp-clhs-base relative))))))
 
 (setq common-lisp-hyperspec-root
