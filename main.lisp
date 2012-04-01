@@ -46,6 +46,12 @@
   (make-pathname :name "clhs-use-local" :type "el"
                  :defaults directory))
 
+(defun %clhs-use-local-version (clhs-use-local)
+  (when clhs-use-local
+    (with-open-file (stream clhs-use-local)
+      (let ((line (read-line stream)))
+        (subseq line (1+ (position #\Space line :from-end t)))))))
+
 (defun install-clhs-use-local (&key if-exists
                                (verbose t)
                                (destination-directory
@@ -64,16 +70,56 @@
       (format nil "(setq common-lisp-hyperspec-root~%      \"file:~A\")"
               (namestring root))))
 
-(defun print-emacs-setup-form (&key (root (hyperspec-root))
-                               ((:indirect-through-quicklisp-p indirectp) t))
-  (when (and indirectp
-             (not (probe-file (%clhs-use-local
-                               (%default-clhs-use-local-directory)))))
+(defgeneric %print (kind &key)
+  (:method ((kind (eql 'direct)) &rest keys)
+    (apply #'%print 'step-2 keys))
+  (:method ((kind (eql 'clhs-use-local-not-installed))
+            &key)
     (format t "~
-\~2&(Please run (clhs:install-clhs-use-local) in the (Common Lisp) REPL.
+\~2&clhs-use-local.el was not found in your ~~/quicklisp/ directory.
+This means you're at step 1 of 2 for configuring Emacs/Slime
+to perform lookups/browsing with your local copy of the CLHS.
+
+Please run (clhs:install-clhs-use-local) in the (Common Lisp) REPL.
 This will install clhs-use-local.el in your ~~/quicklisp/ directory.
-The step below depends on this file.)~2%"))
-  (format t "~2&Make Emacs evaluate this form to browse the CLHS locally:
+
+Then, run (clhs:print-emacs-setup-form) again for instructions for step 2.~2%"))
+  (:method ((kind (eql 'clhs-use-local-version-mismatch))
+            &key installed-clhs-use-local bundled-clhs-use-local
+            installed-version bundled-version)
+    (check-type installed-version string)
+    (check-type bundled-version string)
+    (format t "~
+\~2&clhs-use-local.el was found in your ~~/quicklisp/ directory.
+
+However, there's a version mismatch between it and
+the one bundled by this version of the CLHS ASDF wrapper:
+
+Installed version: ~A
+  Bundled version: ~A
+
+
+Please run (clhs:install-clhs-use-local :if-exists :supersede).
+This will supersede your installed version with the bundled one, as follows:
+
+~A (version ~A)
+-- will be copied to and overwrite -->
+~A (version ~A)~2%"
+            installed-version
+            bundled-version
+            bundled-clhs-use-local
+            bundled-version
+            installed-clhs-use-local
+            installed-version))
+  (:method ((kind (eql 'clhs-use-local-installed)) &rest keys)
+    (format t "~
+~2&(clhs-use-local.el was found in your ~~/quicklisp/ directory.
+Moreover, its version matches the one bundled with this CLHS ASDF wrapper.
+You may proceed with step 2 of 2 below.)~2%")
+    (apply #'%print 'step-2 keys))
+  (:method ((kind (eql 'step-2)) &key emacs-setup-form readme-location)
+    (format t "~
+~2&Make Emacs evaluate this form to browse the CLHS locally:
 
 ~A
 
@@ -83,10 +129,44 @@ If it was, then this will open your browser and the URL will begin with \"file:/
 
 Put the form in your ~~/.emacs to persist the change for future sessions.
 
-The README file has some further information.
+
+The README file has some further information,
+including a list of 3 useful Slime CLHS lookup commands
+and how to get Emacs to open CLHS pages in a different browser.
 \(Location: ~A)~2%"
-	  (emacs-setup-form :root root
-                            :indirect-through-quicklisp-p indirectp)
-	  (make-pathname :name "README"
-			 :defaults *system-directory*))
+            emacs-setup-form
+            readme-location)))
+
+(defun print-emacs-setup-form (&key (root (hyperspec-root))
+                               ((:indirect-through-quicklisp-p indirectp) t))
+  (let* ((installed-clhs-use-local
+          (probe-file (%clhs-use-local
+                       (%default-clhs-use-local-directory))))
+         (bundled-clhs-use-local
+          (probe-file (%clhs-use-local *system-directory*)))
+         (installed-version (%clhs-use-local-version
+                             installed-clhs-use-local))
+         (bundled-version (%clhs-use-local-version
+                           bundled-clhs-use-local)))
+    (%print (cond ((not indirectp)
+                   'direct)
+                  ((not installed-clhs-use-local)
+                   'clhs-use-local-not-installed)
+                  ((string/= installed-version
+                             bundled-version)
+                   'clhs-use-local-version-mismatch)
+                  (t
+                   'clhs-use-local-installed))
+            :allow-other-keys t
+            :root root
+            :indirectp indirectp
+            :installed-clhs-use-local installed-clhs-use-local
+            :bundled-clhs-use-local bundled-clhs-use-local
+            :installed-version installed-version
+            :bundled-version bundled-version
+            :emacs-setup-form (emacs-setup-form
+                               :root root
+                               :indirect-through-quicklisp-p indirectp)
+            :readme-location (make-pathname :name "README"
+                                            :defaults *system-directory*)))
   (values))
