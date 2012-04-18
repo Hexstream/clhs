@@ -6,6 +6,7 @@
 	   #:*hyperspec-relative-directory*
 
 	   #:hyperspec-root
+           #:clhs-use-local-status
            #:install-clhs-use-local
            #:emacs-setup-form
 	   #:print-emacs-setup-form))

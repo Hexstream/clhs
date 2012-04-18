@@ -52,6 +52,27 @@
       (let ((line (read-line stream)))
         (subseq line (1+ (position #\Space line :from-end t)))))))
 
+(defun clhs-use-local-status ()
+  (let* ((bundled
+          (probe-file (%clhs-use-local *system-directory*)))
+         (expected-installed
+          (%clhs-use-local
+           (%default-clhs-use-local-directory)))
+         (installed
+          (probe-file expected-installed))
+         (bundled-version (%clhs-use-local-version bundled))
+         (installed-version (%clhs-use-local-version installed)))
+    (values (cond ((not installed)
+                   :not-installed)
+                  ((string/= installed-version bundled-version)
+                   :version-mismatch)
+                  (t :installed))
+            :bundled bundled
+            :expected-installed expected-installed
+            :installed installed
+            :bundled-version bundled-version
+            :installed-version installed-version)))
+
 (defun install-clhs-use-local (&key if-exists
                                (verbose t)
                                (destination-directory
@@ -71,10 +92,7 @@
               (namestring root))))
 
 (defgeneric %print (kind &key)
-  (:method ((kind (eql 'direct)) &rest keys)
-    (apply #'%print 'step-2 keys))
-  (:method ((kind (eql 'clhs-use-local-not-installed))
-            &key)
+  (:method ((kind (eql :not-installed)) &key)
     (format t "~
 \~2&clhs-use-local.el was not found in your ~~/quicklisp/ directory.
 This means you're at step 1 of 2 for configuring Emacs/Slime
@@ -84,20 +102,18 @@ Please run (clhs:install-clhs-use-local) in the (Common Lisp) REPL.
 This will install clhs-use-local.el in your ~~/quicklisp/ directory.
 
 Then, run (clhs:print-emacs-setup-form) again for instructions for step 2.~2%"))
-  (:method ((kind (eql 'clhs-use-local-version-mismatch))
-            &key installed-clhs-use-local bundled-clhs-use-local
-            installed-version bundled-version)
+  (:method ((kind (eql :version-mismatch))
+            &key installed bundled installed-version bundled-version)
     (check-type installed-version string)
     (check-type bundled-version string)
     (format t "~
-\~2&clhs-use-local.el was found in your ~~/quicklisp/ directory.
+\~2&clhs-use-local.el was found in your ~~/quicklisp/ directory, as expected.
 
 However, there's a version mismatch between it and
 the one bundled by this version of the CLHS ASDF wrapper:
 
 Installed version: ~A
   Bundled version: ~A
-
 
 Please run (clhs:install-clhs-use-local :if-exists :supersede).
 This will supersede your installed version with the bundled one, as follows:
@@ -107,17 +123,17 @@ This will supersede your installed version with the bundled one, as follows:
 ~A (version ~A)~2%"
             installed-version
             bundled-version
-            bundled-clhs-use-local
+            bundled
             bundled-version
-            installed-clhs-use-local
+            installed
             installed-version))
-  (:method ((kind (eql 'clhs-use-local-installed)) &rest keys)
+  (:method ((kind (eql :installed)) &rest keys)
     (format t "~
 ~2&(clhs-use-local.el was found in your ~~/quicklisp/ directory.
 Moreover, its version matches the one bundled with this CLHS ASDF wrapper.
 You may proceed with step 2 of 2 below.)~2%")
-    (apply #'%print 'step-2 keys))
-  (:method ((kind (eql 'step-2)) &key emacs-setup-form readme-location)
+    (apply #'%print :step-2 keys))
+  (:method ((kind (eql :step-2)) &key emacs-setup-form readme-location)
     (format t "~
 ~2&Make Emacs evaluate this form to browse the CLHS locally:
 
@@ -139,34 +155,39 @@ and how to get Emacs to open CLHS pages in a different browser.
 
 (defun print-emacs-setup-form (&key (root (hyperspec-root))
                                ((:indirect-through-quicklisp-p indirectp) t))
-  (let* ((installed-clhs-use-local
-          (probe-file (%clhs-use-local
-                       (%default-clhs-use-local-directory))))
-         (bundled-clhs-use-local
-          (probe-file (%clhs-use-local *system-directory*)))
-         (installed-version (%clhs-use-local-version
-                             installed-clhs-use-local))
-         (bundled-version (%clhs-use-local-version
-                           bundled-clhs-use-local)))
-    (%print (cond ((not indirectp)
-                   'direct)
-                  ((not installed-clhs-use-local)
-                   'clhs-use-local-not-installed)
-                  ((string/= installed-version
-                             bundled-version)
-                   'clhs-use-local-version-mismatch)
-                  (t
-                   'clhs-use-local-installed))
-            :allow-other-keys t
-            :root root
-            :indirectp indirectp
-            :installed-clhs-use-local installed-clhs-use-local
-            :bundled-clhs-use-local bundled-clhs-use-local
-            :installed-version installed-version
-            :bundled-version bundled-version
-            :emacs-setup-form (emacs-setup-form
-                               :root root
-                               :indirect-through-quicklisp-p indirectp)
-            :readme-location (make-pathname :name "README"
-                                            :defaults *system-directory*)))
+  (let ((common
+         (list :emacs-setup-form
+               (emacs-setup-form :root root
+                                 :indirect-through-quicklisp-p indirectp)
+               :readme-location
+               (make-pathname :name "README"
+                              :defaults *system-directory*))))
+    (if (not indirectp)
+        (apply #'%print :step-2 common)
+        (multiple-value-call #'%print
+          (clhs-use-local-status)
+          :allow-other-keys t
+          (values-list common))))
   (values))
+
+(defun %maybe-print-clhs-use-local-status-warning
+    (&key (stream *query-io*)
+     ;; As of 18 april 2012 it seems Swank erroneously has
+     ;; #'interactive-stream-p always return NIL for its streams.
+     (interactive-test-p (unless (member :swank *features*)
+                           t)))
+  (let ((runprompt
+         "Please run (clhs:print-emacs-setup-form) for details")
+        (status (clhs-use-local-status)))
+    (when (or (not interactive-test-p)
+              (interactive-stream-p stream))
+      (case status
+        (:not-installed (format stream "~
+~2&clhs-use-local.el doesn't seem to have been installed.~2%~A~@
+on how to setup Emacs/Slime to perform lookups/browsing
+with your local copy of the CLHS provided by this wrapper.~2%" runprompt))
+        (:version-mismatch (format stream "~
+~2&clhs-use-local.el version mismatch detected.~2%~A.~2%" runprompt))))
+    status))
+
+(%maybe-print-clhs-use-local-status-warning)
