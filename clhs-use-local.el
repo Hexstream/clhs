@@ -1,4 +1,4 @@
-;;;; Version: 0.4
+;;;; Version: 0.5
 ;;;;
 ;;;; This file was installed by clhs (trivial ASDF wrapper), like this:
 ;;;; (clhs:install-clhs-use-local)
@@ -30,7 +30,34 @@
       (let ((relative (quicklisp-clhs-file-contents location-file)))
         (file-name-directory (concat quicklisp-clhs-base relative))))))
 
-(setq common-lisp-hyperspec-root
-      (concat "file:"
-              (quicklisp-clhs-system-location)
-              "HyperSpec-7-0/HyperSpec/"))
+(defun quicklisp-clhs-symlink-location (&optional as-directory-p)
+  (concat quicklisp-clhs-base
+          "HyperSpec"
+          (if as-directory-p "/" "")))
+
+(defun quicklisp-clhs-hyperspec-location (&optional through-symlink-p)
+  (if through-symlink-p
+      (quicklisp-clhs-symlink-location t)
+    (concat (quicklisp-clhs-system-location)
+            "HyperSpec-7-0/HyperSpec/")))
+
+(defun quicklisp-clhs-inhibit-symlink-p ()
+  (and (boundp 'quicklisp-clhs-inhibit-symlink-p)
+       quicklisp-clhs-inhibit-symlink-p))
+
+(defun quicklisp-clhs-setup-symlink ()
+  (make-symbolic-link (quicklisp-clhs-hyperspec-location)
+                      (quicklisp-clhs-symlink-location)
+                      t)
+  ;; Ideally we'd detect if symlink creation was actually successful.
+  ;; Let's just assume it was, for now.
+  t)
+
+(defun quicklisp-clhs-setup-hyperspec-root (&optional through-symlink-p)
+  (setq common-lisp-hyperspec-root
+        (concat "file:"
+                (quicklisp-clhs-hyperspec-location through-symlink-p))))
+
+(quicklisp-clhs-setup-hyperspec-root
+ (unless (quicklisp-clhs-inhibit-symlink-p)
+   (quicklisp-clhs-setup-symlink)))
