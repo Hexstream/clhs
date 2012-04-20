@@ -45,10 +45,18 @@
   (and (boundp 'quicklisp-clhs-inhibit-symlink-p)
        quicklisp-clhs-inhibit-symlink-p))
 
-(defun quicklisp-clhs-setup-symlink ()
-  (make-symbolic-link (quicklisp-clhs-hyperspec-location)
-                      (quicklisp-clhs-symlink-location)
-                      t)
+(defun quicklisp-clhs-inhibit-symlink-relative-p ()
+  (and (boundp 'quicklisp-clhs-inhibit-symlink-relative-p)
+       quicklisp-clhs-inhibit-symlink-relative-p))
+
+(defun quicklisp-clhs-setup-symlink (&optional relativep)
+  (let ((absolute (quicklisp-clhs-hyperspec-location)))
+    (make-symbolic-link (if relativep
+                            (file-relative-name absolute
+                                                quicklisp-clhs-base)
+                          absolute)
+                        (quicklisp-clhs-symlink-location)
+                        t))
   ;; Ideally we'd detect if symlink creation was actually successful.
   ;; Let's just assume it was, for now.
   t)
@@ -60,4 +68,6 @@
 
 (quicklisp-clhs-setup-hyperspec-root
  (unless (quicklisp-clhs-inhibit-symlink-p)
-   (quicklisp-clhs-setup-symlink)))
+   (quicklisp-clhs-setup-symlink
+    (unless (quicklisp-clhs-inhibit-symlink-relative-p)
+      t))))
