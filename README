@@ -24,7 +24,12 @@ local resource and to ensure reliable, fast access from anywhere while
 on the go (ex: laptop, smartphone).
 
 Use (clhs:print-emacs-setup-form) to print the command used to tell
-Emacs to use your newly local copy of CLHS.
+Emacs to use your new local copy of CLHS.
+
+(Note that the default setup involves automatic creation and usage of
+a symlink that points to the 'HyperSpec' directory within the "real
+top-level" 'HyperSpec-7-0' directory. Don't redistribute the former
+without the latter!)
 
 Slime has commands to quickly get at what you want in the HyperSpec.
 They are:
