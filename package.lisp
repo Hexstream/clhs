@@ -4,8 +4,9 @@
   (:use #:cl)
   (:export #:*system-directory*
 	   #:*hyperspec-relative-directory*
+           #:*quicklisp-directory*
 
-	   #:hyperspec-root
+           #:hyperspec-root
            #:clhs-use-local-status
            #:install-clhs-use-local
            #:emacs-setup-form
