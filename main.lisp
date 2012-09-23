@@ -7,12 +7,21 @@
 (defparameter *hyperspec-relative-directory*
   '("HyperSpec-7-0" "HyperSpec"))
 
+(defun %try-getting-authoritative-quicklisp-directory ()
+  (let ((ql (find-package '#:quicklisp)))
+    (and ql
+         (let ((home-symbol (find-symbol (string '#:*quicklisp-home*) ql)))
+           (and home-symbol
+                (boundp home-symbol)
+                (symbol-value home-symbol))))))
+
 (defvar *quicklisp-directory*
-  (make-pathname
-   :name nil :type nil
-   :defaults (merge-pathnames (make-pathname
-                               :directory '(:relative "quicklisp"))
-                              (user-homedir-pathname))))
+  (or (%try-getting-authoritative-quicklisp-directory)
+      (make-pathname
+       :name nil :type nil
+       :defaults (merge-pathnames (make-pathname
+                                   :directory '(:relative "quicklisp"))
+                                  (user-homedir-pathname)))))
 
 (defun hyperspec-root (&key (system-directory *system-directory*)
 		       (relative-directory *hyperspec-relative-directory*))
