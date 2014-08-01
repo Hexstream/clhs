@@ -32,7 +32,7 @@
 (defun %copy-file (source destination
                    &key (if-source-does-not-exist :error)
                    (if-destination-exists :error))
-  (unless (and (eq if-destination-exists nil) (probe-file destination))
+  (unless (and (eq if-destination-exists nil) (cl-fad:directory-exists-p destination))
     (let (buffer)
       (with-open-file (in source
                           :direction :input
@@ -63,11 +63,11 @@
 
 (defun clhs-use-local-status (&key (quicklisp-directory *quicklisp-directory*))
   (let* ((bundled
-          (probe-file (%clhs-use-local *system-directory*)))
+          (cl-fad:file-exists-p (%clhs-use-local *system-directory*)))
          (expected-installed
           (%clhs-use-local quicklisp-directory))
          (installed
-          (probe-file expected-installed))
+          (cl-fad:file-exists-p expected-installed))
          (bundled-version (%clhs-use-local-version bundled))
          (installed-version (%clhs-use-local-version installed)))
     (values (cond ((not installed)
@@ -93,7 +93,7 @@
   (if ensure-directories-exist-p
       (ensure-directories-exist destination-directory :verbose verbose))
   (if (and (not ensure-directories-exist-p)
-           (not (probe-file destination-directory)))
+           (not (cl-fad:directory-exists-p destination-directory)))
       (let ((directory (directory-namestring destination-directory)))
         (if (pathname-match-p destination-directory *quicklisp-directory*)
             (format t "The following doesn't seem to be ~
@@ -193,7 +193,7 @@ and how to get Emacs to open CLHS pages in a different browser.
       (format t "~2&[ Quicklisp directory: \"~A\" (~A)~%  ~
                       If the above location is not correct, do:~%  ~A ]"
               directory
-              (if (probe-file directory) "exists" "DOES NOT exist")
+              (if (cl-fad:directory-exists-p directory) "exists" "DOES NOT exist")
               (%quicklisp-directory-setf-example)))
     (if (not indirectp)
         (apply #'%print :step-2 common)

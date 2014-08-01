@@ -1,7 +1,8 @@
 (in-package #:cl-user)
 
 (defpackage #:clhs
-  (:use #:cl)
+  (:use #:cl
+	#:cl-fad)
   (:export #:*system-directory*
 	   #:*hyperspec-relative-directory*
            #:*quicklisp-directory*
