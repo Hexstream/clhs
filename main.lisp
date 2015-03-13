@@ -119,7 +119,7 @@
   (if indirect-through-quicklisp-p
       (format nil "(load ~S t)"
               (namestring (%clhs-use-local quicklisp-directory)))
-      (format nil "(setq common-lisp-hyperspec-root~%      \"file:~A\")"
+      (format nil "(setq common-lisp-hyperspec-root~%      \"file://~A\")"
               (namestring root))))
 
 (defgeneric %print (kind &key)

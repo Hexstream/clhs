@@ -1,4 +1,4 @@
-;;;; Version: 0.5
+;;;; Version: 0.6
 ;;;;
 ;;;; This file was installed by clhs (trivial ASDF wrapper), like this:
 ;;;; (clhs:install-clhs-use-local)
@@ -63,7 +63,7 @@
 
 (defun quicklisp-clhs-setup-hyperspec-root (&optional through-symlink-p)
   (setq common-lisp-hyperspec-root
-        (concat "file:"
+        (concat "file://"
                 (quicklisp-clhs-hyperspec-location through-symlink-p))))
 
 (quicklisp-clhs-setup-hyperspec-root
