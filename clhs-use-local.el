@@ -1,4 +1,4 @@
-;;;; Version: 0.6
+;;;; Version: 0.7
 ;;;;
 ;;;; This file was installed by clhs (trivial ASDF wrapper), like this:
 ;;;; (clhs:install-clhs-use-local)
@@ -49,16 +49,30 @@
   (and (boundp 'quicklisp-clhs-inhibit-symlink-relative-p)
        quicklisp-clhs-inhibit-symlink-relative-p))
 
+(defun quicklisp-clhs-ensure-symbolic-link (symlink-location path)
+  (let ((current-path (file-symlink-p symlink-location)))
+    (when (or (not current-path) (not (string-equal current-path path)))
+      (make-symbolic-link path symlink-location t))))
+
 (defun quicklisp-clhs-setup-symlink (&optional relativep)
-  (let ((absolute (quicklisp-clhs-hyperspec-location)))
-    (make-symbolic-link (if relativep
-                            (file-relative-name absolute
-                                                quicklisp-clhs-base)
-                          absolute)
-                        (quicklisp-clhs-symlink-location)
-                        t))
-  ;; Ideally we'd detect if symlink creation was actually successful.
-  ;; Let's just assume it was, for now.
+  (let ((symlink-location (quicklisp-clhs-symlink-location))
+        (desired-path (let ((absolute (quicklisp-clhs-hyperspec-location)))
+                        (if relativep
+                            (file-relative-name absolute quicklisp-clhs-base)
+                          absolute))))
+    (condition-case nil
+        (quicklisp-clhs-ensure-symbolic-link
+         symlink-location
+         desired-path)
+      (file-error
+       (with-output-to-temp-buffer "clhs (thin ASDF wrapper)"
+         (princ (format "Sorry, unable to create symlink named \"%s\" pointing to \"%s\".
+
+Would you happen to be using Windows 10? Then you may need administrator privileges to be able to create symlinks. Please either run emacs as an administrator and then load clhs-use-local.el, or manually create the symlink with mklink in an administrator-mode console per the above parameters. This needs to be done only once, you should be able to use the CLHS wrapper as a normal user subsequently.
+
+(TODO: Detect Windows 10 instead of unconditionally displaying the above note about Windows 10.)"
+                        symlink-location
+                        desired-path))))))
   t)
 
 (defun quicklisp-clhs-setup-hyperspec-root (&optional through-symlink-p)
