@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Jean-Philippe Paradis" />
+    <link rel="author" href="https://abc.hexstream.xyz/" />
+    <link rel="license" href="https://www.hexstreamsoft.com/UNLICENSE" />
+    <meta name="description" content="Easily download and install the CLHS with quicklisp. Setup emacs to use your local copy for fast browsing, even while offline." />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>clhs | Libraries | HexstreamSoft</title>
+    <link href="../../css/global.css" rel="stylesheet" type="text/css" />
+    <link href="../libraries.css" rel="stylesheet" type="text/css" />
+    <link href="index.css" rel="stylesheet" type="text/css" />
+    <script src="https://global.hexstreamsoft.com/scripts/global.js"></script>
+    <script src="../../scripts/global.js"></script>
+    <script src="../libraries.js" defer></script>
+  </head>
+
+  <body>
+
+    <nav id="top-nav">
+
+      <div class="main">
+
+        <div class="breadcrumbs">
+          <a href="../../">HexstreamSoft</a>
+          <span class="crumb"><span class="s"> » </span><a href="../">Libraries</a></span>
+          <span class="crumb"><span class="s"> » </span><a class="here">clhs</a></span>
+        </div>
+
+      </div>
+
+      <p id="last-updated"><span>This page was last updated on </span><time datetime="2018-07-04">4 july 2018</time><span>.</span></p>
+
+    </nav>
+
+    <main>
+
+      <header id="page-header">
+        <h1>clhs (thin ASDF wrapper)</h1>
+      </header>
+
+      <div class="notice warning">
+        <b>⚠</b>
+        <div><p>This library wraps the CLHS, a proprietary component!</p></div>
+      </div>
+
+      <div class="notice warning">
+        <b>⚠</b>
+        <div>
+          <p>Redistribution of verbatim copies of this library is permitted.</p>
+          <p><b>However, </b>if you want to make ANY changes to it, you should first carefully read and understand the <a href="https://github.com/Hexstream/clhs/blob/master/LICENSE">LICENSE</a> and <a href="https://github.com/Hexstream/clhs/blob/master/README">README</a> files and legal documents referenced therein, including <a href="http://www.lispworks.com/documentation/HyperSpec/Front/Help.htm#Legal">this one</a>.</p>
+        </div>
+      </div>
+
+      <div class="tags contains-groups">
+        <div class="group prominent">
+          <span class="tag github"><a href="http://github.com/Hexstream/clhs">See on GitHub</a></span>
+          <span class="s">, </span>
+          <span class="tag hv quicklisp">
+            <span class="h">Load it with Quicklisp<span>:</span></span>
+            <code class="v">(ql:quickload "clhs")</code>
+          </span>
+        </div>
+        <div class="group">
+          <span class="tag hv">
+            <span class="h">Library type<span>:</span></span>
+            <span class="v">Installation helper</span>
+          </span>
+          <span class="s">, </span>
+          <span class="tag hv">
+            <span class="h">Project complexity<span>:</span></span>
+            <span class="v">Simple</span>
+          </span>
+        </div>
+      </div>
+
+      <nav class="tabs" id="further-info">
+        <ul>
+          <li><a href="../releases/latest-versions/#clhs">Latest release</a></li>
+          <li><a href="../dependencies/#clhs">Dependencies</a></li>
+        </ul>
+        <ul>
+          <li><a href="../external-pages-xref/#clhs">External library pages</a></li>
+        </ul>
+      </nav>
+
+      <div class="scroll" id="factsheet-wrapper">
+        <table class="factsheet">
+          <tbody>
+            <tr>
+              <th class="project-license-overall" rowspan="4">Project authors</th>
+              <th class="project-license-wrapper-part property">Wrapper</th>
+              <td class="project-license-wrapper-part"><a href="../../">Jean-Philippe Paradis</a></td>
+            </tr>
+            <tr>
+              <th class="project-license-clhs-part property">CL spec</th>
+              <td class="project-license-clhs-part"><a href="http://www.lispworks.com/documentation/HyperSpec/Front/Help.htm#Authorship">X3J13 Committee</a></td>
+            </tr>
+            <tr>
+              <th class="project-license-clhs-part property"><a href="http://www.lispworks.com/documentation/HyperSpec/Front/index.htm">CLHS</a></th>
+              <td class="project-license-clhs-part"><a href="http://www.nhplace.com/kent/">Kent Pitman</a></td>
+            </tr>
+            <tr>
+              <th class="project-license-clhs-part property"><a href="http://www.lispworks.com/documentation/common-lisp.html">CLHS ©</a></th>
+              <td class="project-license-clhs-part"><a href="http://www.lispworks.com/documentation/HyperSpec/Front/Help.htm#Authorship">LispWorks Ltd</a></td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <th class="project-license-overall" rowspan="3"><a href="https://github.com/Hexstream/clhs/blob/master/LICENSE">License</a></th>
+              <th class="project-license-overall property">Overall</th>
+              <td class="project-latest-release-version caution">Mostly proprietary</td>
+            </tr>
+            <tr>
+              <th class="project-license-wrapper-part property">Wrapper part</th>
+              <td class="project-license-wrapper-part good-news"><a href="https://tarballs.hexstreamsoft.com/libraries/latest/clhs_latest.tar.gz">Public Domain</a></td>
+            </tr>
+            <tr>
+              <th class="project-license-clhs-part property">CLHS part</th>
+              <td class="project-license-clhs-part watch-out">Proprietary</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <section id="introduction">
+
+        <p>This installation helper makes it even easier to install a copy of the CLHS locally.</p>
+
+      </section>
+
+      <nav class="tabs">
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#emacs-integration">Emacs integration</a></li>
+        </ul>
+      </nav>
+
+      <section id="overview">
+
+        <h1 class="breadcrumbs-bar">
+          <span class="section-relative-nav">
+            <a href="#overview" class="anchor">⚓</a>
+          </span>
+          <span class="breadcrumbs">
+            <a href="#">CLHS (thin ASDF wrapper)</a>
+            <span class="crumb"><span class="s"> » </span><a class="here">Overview</a></span>
+          </span>
+        </h1>
+
+        <p>The HyperSpec-7-0 directory in this thin ASDF wrapper is a complete and unmodified copy of Lispworks' Common Lisp HyperSpec version 7.0 (referenced from <a href="http://www.lispworks.com/documentation/common-lisp.html">http://www.lispworks.com/documentation/common-lisp.html</a>).
+          <br />Redistribution of the HyperSpec is made with permission from LispWorks per the terms and restrictions set forth at <a href="http://www.lispworks.com/documentation/HyperSpec/Front/Help.htm#Legal">http://www.lispworks.com/documentation/HyperSpec/Front/Help.htm#Legal</a>.
+          <br />You may further redistribute the HyperSpec subject to the same <a href="http://www.lispworks.com/documentation/HyperSpec/Front/Help.htm#Legal">terms and restrictions</a>.</p>
+
+        <p>This thin ASDF wrapper was prepared by Jean-Philippe Paradis (<a href="mailto:hexstream@gmail.com">hexstream@gmail.com</a>) for inclusion in Quicklisp and is not endorsed by LispWorks Ltd. Common Lisp HyperSpec is a registered trademark of LispWorks Ltd. Jean-Philippe Paradis is not a lawyer, has not consulted a lawyer, and prepared this thin ASDF wrapper as a community service on a "good faith, best-effort" basis.</p>
+
+        <p>The <a href="ftp://ftp.lispworks.com/pub/software_tools/reference/HyperSpec-7-0.tar.gz">original download</a> was a <code>.tar.gz</code> file and has been uncompressed for your convenience. The primary use cases for downloading the HyperSpec to your hard drive instead of using <a href="http://www.lispworks.com/documentation/HyperSpec/Front/index.htm">the online documentation</a> are to benefit from the increased responsiveness inherent in browsing a local resource and to ensure reliable, fast access from anywhere while on the go (ex: laptop, smartphone).</p>
+
+      </section>
+
+      <section id="emacs-integration">
+
+        <h1 class="breadcrumbs-bar">
+          <span class="section-relative-nav">
+            <a href="#emacs-integration" class="anchor">⚓</a>
+          </span>
+          <span class="breadcrumbs">
+            <a href="#">CLHS (thin ASDF wrapper)</a>
+            <span class="crumb"><span class="s"> » </span><a class="here">Emacs integration</a></span>
+          </span>
+        </h1>
+
+        <p>Use <code class="common-lisp">(clhs:print-emacs-setup-form)</code> to print the command used to tell Emacs to use your new local copy of CLHS.</p>
+
+        <p>(Note that the default setup involves automatic creation and usage of a symlink that points to the 'HyperSpec' directory within the "real top-level" 'HyperSpec-7-0' directory. Don't redistribute the former without the latter!)</p>
+
+        <p id="slime-lookup-commands">Slime has commands to quickly get at what you want in the HyperSpec.
+          They are:</p>
+
+        <dl>
+          <dt><dfn>slime-documentation-lookup</dfn> (C-c C-d h)</dt>
+          <dd>Lookup a symbol (such as "make-instance").</dd>
+
+          <dt><dfn>common-lisp-hyperspec-lookup-reader-macro</dfn> (C-c C-d #)</dt>
+          <dd>Lookup a reader-macro (such as "#'" or "(").</dd>
+
+          <dt><dfn>common-lisp-hyperspec-format</dfn> (C-c C-d ~)</dt>
+          <dd>Lookup a FORMAT directive (such as "~A").</dd>
+        </dl>
+
+
+        <p>If the default browser used is not the one you wanted, here's how
+          you might tell Emacs to use Firefox instead:</p>
+
+        <div class="scroll">
+          <pre class="example"><code class="emacs-lisp">(setq browse-url-firefox-program "firefox")</code></pre>
+        </div>
+
+        <p>Or Google Chrome:</p>
+
+        <div class="scroll">
+          <pre class="example"><code class="emacs-lisp">(setq browse-url-browser-function 'browse-url-generic)
+(setq browse-url-generic-program "google-chrome")</code></pre>
+        </div>
+
+      </section>
+
+      <p>
+        <small>Common Lisp HyperSpec(tm) is a registered trademark of <a href="http://www.lispworks.com">LispWorks Ltd</a>.
+          <br />The author of this library is not affiliated with LispWorks Ltd.</small>
+      </p>
+
+    </main>
+
+    <footer id="footer">
+      <div class="back-to-top left">
+        <a href="#">⬆</a>
+      </div>
+      <div class="main">
+        <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fwww.hexstreamsoft.com%2Flibraries%2Fclhs%2F">✔ HTML5</a>
+        <a href="https://www.hexstreamsoft.com/README" class="caution">⚠ Public Domain / Proprietary</a>
+        <a href="http://jigsaw.w3.org/css-validator/validator?uri=http%3A%2F%2Fwww.hexstreamsoft.com%2Flibraries%2Fclhs%2F">✔ CSS3</a>
+        <a>✔ Mobile-friendly</a>
+      </div>
+      <div class="back-to-top right">
+        <a href="#">⬆</a>
+      </div>
+    </footer>
+
+  </body>
+</html>
