@@ -18,4 +18,6 @@ Thin ASDF wrapper (excluding HyperSpec): Public Domain"
   :serial cl:t
   :components ((:module "HyperSpec-7-0")
 	       (:file "package")
-	       (:file "main")))
+	       (:file "main"))
+
+  :in-order-to ((asdf:test-op (asdf:test-op #:clhs_tests))))
