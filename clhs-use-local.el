@@ -50,9 +50,12 @@
        quicklisp-clhs-inhibit-symlink-relative-p))
 
 (defun quicklisp-clhs-ensure-symbolic-link (symlink-location path)
-  (let ((current-path (file-symlink-p symlink-location)))
-    (when (or (not current-path) (not (string-equal current-path path)))
-      (make-symbolic-link path symlink-location t))))
+  (if (and (eq system-type 'windows-nt) ;; windows seems not to recognize symlinks
+           (file-directory-p (quicklisp-clhs-symlink-location)))
+      t
+    (let ((current-path (file-symlink-p symlink-location)))
+      (when (or (not current-path) (not (string-equal current-path path)))
+        (make-symbolic-link path symlink-location t)))))
 
 (defun quicklisp-clhs-setup-symlink (&optional relativep)
   (let ((symlink-location (quicklisp-clhs-symlink-location))
