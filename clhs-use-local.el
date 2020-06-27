@@ -49,8 +49,11 @@
   (and (boundp 'quicklisp-clhs-inhibit-symlink-relative-p)
        quicklisp-clhs-inhibit-symlink-relative-p))
 
+(defun quicklisp-clhs-resolve-symlink-as-folder (link)
+  (concat (file-symlink-p link) "/"))
+
 (defun quicklisp-clhs-ensure-symbolic-link (symlink-location path)
-  (let ((current-path (file-symlink-p symlink-location)))
+  (let ((current-path (quicklisp-clhs-resolve-symlink-as-folder symlink-location)))
     (when (or (not current-path) (not (string-equal current-path path)))
       (make-symbolic-link path symlink-location t))))
 
