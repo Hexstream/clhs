@@ -35,6 +35,10 @@
           "HyperSpec"
           (if as-directory-p "/" "")))
 
+(defun quicklisp-clhs-symlink-resolved (&optional as-directory-p)
+  (concat (file-symlink-p (quicklisp-clhs-symlink-location))
+          (if as-directory-p "/" "")))
+
 (defun quicklisp-clhs-hyperspec-location (&optional through-symlink-p)
   (if through-symlink-p
       (quicklisp-clhs-symlink-location t)
@@ -50,12 +54,9 @@
        quicklisp-clhs-inhibit-symlink-relative-p))
 
 (defun quicklisp-clhs-ensure-symbolic-link (symlink-location path)
-  (if (and (eq system-type 'windows-nt) ;; windows seems not to recognize symlinks
-           (file-directory-p (quicklisp-clhs-symlink-location)))
-      t
-    (let ((current-path (file-symlink-p symlink-location)))
-      (when (or (not current-path) (not (string-equal current-path path)))
-        (make-symbolic-link path symlink-location t)))))
+  (let ((current-path (quicklisp-clhs-symlink-resolved t)))
+    (when (or (not current-path) (not (string-equal current-path path)))
+      (make-symbolic-link path symlink-location t))))
 
 (defun quicklisp-clhs-setup-symlink (&optional relativep)
   (let ((symlink-location (quicklisp-clhs-symlink-location))
