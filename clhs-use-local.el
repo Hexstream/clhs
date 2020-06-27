@@ -35,10 +35,6 @@
           "HyperSpec"
           (if as-directory-p "/" "")))
 
-(defun quicklisp-clhs-symlink-resolved (&optional as-directory-p)
-  (concat (file-symlink-p (quicklisp-clhs-symlink-location))
-          (if as-directory-p "/" "")))
-
 (defun quicklisp-clhs-hyperspec-location (&optional through-symlink-p)
   (if through-symlink-p
       (quicklisp-clhs-symlink-location t)
@@ -53,8 +49,11 @@
   (and (boundp 'quicklisp-clhs-inhibit-symlink-relative-p)
        quicklisp-clhs-inhibit-symlink-relative-p))
 
+(defun quicklisp-clhs-resolve-symlink-as-folder (link)
+  (concat (file-symlink-p link) "/"))
+
 (defun quicklisp-clhs-ensure-symbolic-link (symlink-location path)
-  (let ((current-path (quicklisp-clhs-symlink-resolved t)))
+  (let ((current-path (quicklisp-clhs-resolve-symlink-as-folder symlink-location)))
     (when (or (not current-path) (not (string-equal current-path path)))
       (make-symbolic-link path symlink-location t))))
 
