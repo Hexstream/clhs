@@ -50,7 +50,7 @@
        quicklisp-clhs-inhibit-symlink-relative-p))
 
 (defun quicklisp-clhs-ensure-symbolic-link (symlink-location path)
-  (let ((current-path (file-symlink-p symlink-location)))
+  (let ((current-path (concat (file-symlink-p symlink-location) "/")))
     (when (or (not current-path) (not (string-equal current-path path)))
       (make-symbolic-link path symlink-location t))))
 
