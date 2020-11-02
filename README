@@ -1,55 +1,8 @@
-The HyperSpec-7-0 directory in this thin ASDF wrapper is a complete
-and unmodified copy of Lispworks' Common Lisp HyperSpec version 7.0
-(referenced from
-<http://www.lispworks.com/documentation/common-lisp.html>).
-Redistribution of the HyperSpec is made with permission from LispWorks
-per the terms and restrictions set forth at
-<http://www.lispworks.com/documentation/HyperSpec/Front/Help.htm#Legal>.
-You may further redistribute the HyperSpec subject to the same terms
-and restrictions; consult the previous link for all details.
-
-This thin ASDF wrapper was prepared by Jean-Philippe Paradis
-(hexstream@gmail.com) for inclusion in Quicklisp and is not endorsed
-by LispWorks Ltd. Common Lisp HyperSpec is a registered trademark of
-LispWorks Ltd. Jean-Philippe Paradis is not a lawyer, has not
-consulted a lawyer, and prepared this thin ASDF wrapper as a community
-service on a "good faith, best-effort" basis.
-
-The original download was a .tar.gz file and has been uncompressed for
-your convenience. The primary use cases for downloading the HyperSpec
-to your hard drive instead of using the online documentation at
-<http://www.lispworks.com/documentation/HyperSpec/Front/index.htm> are
-to benefit from the increased responsiveness inherent in browsing a
-local resource and to ensure reliable, fast access from anywhere while
-on the go (ex: laptop, smartphone).
-
-Use (clhs:print-emacs-setup-form) to print the command used to tell
-Emacs to use your new local copy of CLHS.
-
-(Note that the default setup involves automatic creation and usage of
-a symlink that points to the 'HyperSpec' directory within the "real
-top-level" 'HyperSpec-7-0' directory. Don't redistribute the former
-without the latter!)
-
-Slime has commands to quickly get at what you want in the HyperSpec.
-They are:
-
-slime-documentation-lookup (C-c C-d h)
-Lookup a symbol (such as "make-instance").
-
-common-lisp-hyperspec-lookup-reader-macro (C-c C-d #)
-Lookup a reader-macro (such as "#'" or "(").
-
-common-lisp-hyperspec-format (C-c C-d ~)
-Lookup a FORMAT directive (such as "~A").
+Project's home: https://www.hexstreamsoft.com/libraries/clhs/
 
 
-If the default browser used is not the one you wanted, here's how
-you might tell Emacs to use Firefox instead:
+This installation helper makes it even easier to install a copy of the CLHS locally.
 
-(setq browse-url-firefox-program "firefox")
 
-Or Google Chrome:
-
-(setq browse-url-browser-function 'browse-url-generic)
-(setq browse-url-generic-program "google-chrome")
+This library is mostly proprietary.
+See the LICENSE file for details.
