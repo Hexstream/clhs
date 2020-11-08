@@ -5,7 +5,7 @@
   :author "Common Lisp Specification: X3J13 Committee
 HyperSpec: Kent Pitman <kmp@lispworks.com>
 HyperSpec funder and copyright holder: LispWorks ltd. <support@lispworks.com>
-Thin ASDF wrapper (excluding HyperSpec): Jean-Philippe Paradis <hexstream@gmail.com>"
+Thin ASDF wrapper (excluding HyperSpec): Jean-Philippe Paradis <hexstream@hexstreamsoft.com>"
 
   ;; See the LICENSE file for details.
   :license "HyperSpec: Proprietary;
